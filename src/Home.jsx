@@ -12,18 +12,16 @@ import {
   AlertIcon,
 } from "@chakra-ui/react";
 
-// Access environment variables
-// eslint-disable-next-line no-undef
-const apiKey = process.env.REACT_APP_COUNTRY_API_KEY; // API key from environment variable
-// eslint-disable-next-line no-undef
-const baseUrl = process.env.REACT_APP_COUNTRY_API_URL; // Base endpoint from environment variable
+const apiKey = process.env.REACT_APP_COUNTRY_API_KEY; // Access environment variable
+const baseUrl = process.env.REACT_APP_COUNTRY_API_URL; // Access environment variable
 
-// Debugging statement to check environment variables
-// eslint-disable-next-line no-undef
-console.log("Environment variables:", process.env);
+
 
 
 const Home = () => {
+  console.log("Base URL:", baseUrl); // Should print a valid URL
+  console.log("API Key:", apiKey); // Should print the correct API key
+
   const [country, setCountry] = useState("");
   const [countryData, setCountryData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,19 +32,18 @@ const Home = () => {
   };
 
   const fetchCountryData = async () => {
+    const fullUrl = `${baseUrl}${country}`; // Use baseUrl and append query parameters
+
     setIsLoading(true);
     setError(null);
     setCountryData(null);
 
     try {
-      const response = await axios.get(
-        `${baseUrl}?name=${country}`, // Use the base URL and country name
-        {
-          headers: {
-            "X-Api-Key": apiKey, // Use the API key from the environment variable
-          },
-        }
-      );
+      const response = await axios.get(fullUrl, {
+        headers: {
+          "X-Api-Key": apiKey,
+        },
+      });
 
       const data = response.data;
       if (Array.isArray(data) && data.length > 0) {
